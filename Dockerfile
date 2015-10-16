@@ -3,6 +3,7 @@ MAINTAINER Alex
 
 # Variables
 ENV USER_PASSWD  password
+ENV ROOT_PASSWD  password
 
 # VNC & XRDP Servers
 RUN yum -y install epel-release
@@ -21,7 +22,8 @@ VNCSERVERARGS[0]=\"-geometry 1280x960\""\
 
 # Create User and change passwords
 RUN useradd user && \
-	su user sh -c "yes $USER_PASSWD | vncpasswd" && echo "user:$USER_PASSWD" | chpasswd
+	su user sh -c "yes $USER_PASSWD | vncpasswd" && echo "user:$USER_PASSWD" | chpasswd && \
+	su root sh -c "yes $ROOT_PASSWD | vncpasswd" && echo "root:$ROOT_PASSWD" | chpasswd
 
 # Supervisor services
 RUN echo -e  "\
