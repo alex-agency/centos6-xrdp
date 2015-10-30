@@ -18,12 +18,18 @@ VNCSERVERARGS[0]=\"-geometry 1280x960\""\
 	chkconfig xrdp on 3456 && \
 	chmod -v +x /etc/init.d/xrdp && \
 	chmod -v +x /etc/xrdp/startwm.sh && \
-	echo "gnome-session --session=gnome" > ~/.xsession
+	sed -i 's/crypt_level=high/crypt_level=low/g' /etc/xrdp/xrdp.ini && \
+	sed -i 's/username=ask/username=/g' /etc/xrdp/xrdp.ini && \
+	sed -i 's/password=ask/password='"$USER_PASSWD"'/g' /etc/xrdp/xrdp.ini && \
+	sed -i 's/port=-1/port=5900/g' /etc/xrdp/xrdp.ini && \
+	sed -i 's/X11DisplayOffset=10/X11DisplayOffset=1/g' /etc/xrdp/sesman.ini
 
 # Create User and change passwords
 RUN useradd user && \
 	su user sh -c "yes $USER_PASSWD | vncpasswd" && echo "user:$USER_PASSWD" | chpasswd && \
-	su root sh -c "yes $ROOT_PASSWD | vncpasswd" && echo "root:$ROOT_PASSWD" | chpasswd
+	su root sh -c "yes $ROOT_PASSWD | vncpasswd" && echo "root:$ROOT_PASSWD" | chpasswd && \
+	service vncserver start && \
+	service vncserver stop
 
 # Supervisor services
 RUN echo -e  "\
