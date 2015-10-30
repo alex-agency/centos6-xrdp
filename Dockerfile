@@ -24,10 +24,13 @@ VNCSERVERARGS[0]=\"-geometry 1280x960\""\
 	sed -i 's/port=-1/port=5900/g' /etc/xrdp/xrdp.ini && \
 	sed -i 's/X11DisplayOffset=10/X11DisplayOffset=1/g' /etc/xrdp/sesman.ini
 
-# Create User and change passwords
-RUN useradd user && \
+# Add a user
+RUN yum -y update && yum -y install sudo && \
+	yum clean all && rm -rf /tmp/* && \
+	useradd user && \
+  	echo "user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
 	su user sh -c "yes $USER_PASSWD | vncpasswd" && echo "user:$USER_PASSWD" | chpasswd && \
-	su root sh -c "yes $ROOT_PASSWD | vncpasswd" && echo "root:$ROOT_PASSWD" | chpasswd && \
+	su root echo "root:$ROOT_PASSWD" | chpasswd && \
 	service vncserver start && \
 	service vncserver stop
 
