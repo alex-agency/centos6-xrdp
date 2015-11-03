@@ -1,67 +1,78 @@
 alexagency/centos6-xrdp
 ==========================
 
-Docker Centos 6 XRDP & VNC server
+**Dockerfile for Centos 6 XRDP & VNC server**
 
-Create dev workstation
+### Installation
 
+Install [Docker Machine](https://docs.docker.com/machine/install-machine/).
+
+Create virtual machine:
 ```
 docker-machine create -d virtualbox dev
 ```
 
-Get IP address
-
+Get IP address:
 ```
 docker-machine ip dev
 ```
 
-Connect Docker
-
-```
-eval "$(docker-machine env dev)"
-```
-
-Copy the sources to following path:
-MacOS: /Users/<USERNAME>/Docker/centos6-xrdp 
-Windows: /c/Users/<USERNAME>/docker/centos6-xrdp
-
-Build image
-
+Connect to virtual machine:
 ```
 docker-machine ssh dev
-cd /Users/<USERNAME>/Docker/centos6-xrdp
-cd /c/Users/<USERNAME>/docker/centos6-xrdp
-docker build --force-rm=true -t alexagency/centos6-xrdp .
 ```
 
-Run container in the background
-
+Go to shared (between host and virtualbox) home directory:
 ```
-docker run -d -p 5900:5900 -p 3389:3389 alexagency/centos6-xrdp
-```
-
-Run container in the background with docker inside
-
-```
-docker run -v /var/run/docker.sock:/var/run/docker.sock -v $(which docker):/bin/docker -d -p 5900:5900 -p 3389:3389 alexagency/centos6-xrdp
+cd /Users/<MAC USER>
+cd /c/Users/<WINDOWS USER>
 ```
 
-Run container interactive with remove container after exit (--rm)
-
+Run **alexagency/centos6-xrdp** container from [Docker Hub](https://hub.docker.com/r/alexagency/centos6-xrdp/):
 ```
 docker run -it --rm -p 5900:5900 -p 3389:3389 alexagency/centos6-xrdp
 ```
 
-VNC & RDP:
+Open via VNC or RDP client using virtual maschine's ip-address:
 
 ```
-5900 user:password
+VNC port: 5900
+RDP port: 3389
 ```
+
+Credentials:
+
+```
+user: password
+root: password
+```
+
+### Build
+
+Copy sources to shared (between host and virtualbox) home directory:
+```
+cd /Users/<MAC USER>/Docker/centos6-xrdp
+cd /c/Users/<WINDOWS USER>/Docker/centos6-xrdp
+```
+
+Build Docker Image:
+
+```
+docker build --force-rm=true -t alexagency/centos6-xrdp .
+```
+
+### Useful Docker Commands 
 
 Show list of all containers:
 
 ```
 docker ps -a
+```
+
+Attach to a running container:
+
+```
+docker exec -it <CONTAINER ID> bash
 ```
 
 To remove all stopeed containers:
@@ -80,4 +91,10 @@ To remove image by id:
 
 ```
 docker rmi -f <IMAGE ID>
+```
+
+Delete all existing images:
+
+```
+docker rmi $(docker images -q -a)
 ```
