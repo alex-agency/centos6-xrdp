@@ -11,6 +11,7 @@ RUN yum -y update && \
     yum clean all && rm -rf /tmp/* && \
     useradd user -m && \
     echo "user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
+    sed -i 's/Defaults    requiretty/#Defaults    requiretty/g' /etc/sudoers && \
     echo "root:$ROOT_PASSWD" | chpasswd && \
     su user echo "user:$USER_PASSWD" | chpasswd
 
