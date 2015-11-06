@@ -53,5 +53,13 @@ stderr_logfile=/var/log/supervisor/vncserver-error.log\n\
 stdout_logfile=/var/log/supervisor/vncserver.log"\
 > /etc/supervisord.d/vnc.conf
 
+# It allows run supervisor from user
+RUN chown user:user /var/log/supervisor
+
+# Default user
+USER user
+ENV HOME /home/user
+WORKDIR /home/user
+
 # Inform which port could be opened
 EXPOSE 5900 3389
