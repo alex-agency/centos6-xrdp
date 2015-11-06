@@ -42,13 +42,13 @@ RUN yum -y update && \
 # Supervisor services
 RUN echo -e  "\
 [program:xrdp]\n\
-command=/etc/init.d/xrdp restart\n\
+command=sudo /etc/init.d/xrdp restart\n\
 stderr_logfile=/var/log/supervisor/xrdp-error.log\n\
 stdout_logfile=/var/log/supervisor/xrdp.log"\
 > /etc/supervisord.d/xrdp.conf && \
     echo -e  "\
 [program:vncserver]\n\
-command=/etc/init.d/vncserver restart\n\
+command=sudo /etc/init.d/vncserver restart\n\
 stderr_logfile=/var/log/supervisor/vncserver-error.log\n\
 stdout_logfile=/var/log/supervisor/vncserver.log"\
 > /etc/supervisord.d/vnc.conf
